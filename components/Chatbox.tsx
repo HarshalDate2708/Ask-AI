@@ -54,7 +54,6 @@ const Chatbot = () => {
    }
 
    const handleSampleQuestion = (e:any,question:string) => {
-    // setInput((ques) => question )
     const userMessage = { text: question, sender: "user" };
     setMessages((message) => [...message, userMessage]);
     setInput("");
