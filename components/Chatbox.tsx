@@ -8,14 +8,17 @@ import Image from "next/image";
 import { sampleData } from "@/constant";
 
 const Chatbot = () => {
-  const [messages, setMessages] = useState([
+  const getData = localStorage.getItem("ChatbotMessages");
+  const data = getData ? JSON.parse(getData) : [
     { text: "Hello! How can I help you?", sender: "bot"  }
-  ]);
+  ] ;
+
+  const [messages, setMessages] = useState(data);
   const notResponseMsg:string = "I'm sorry 😔, I didn't quite understand your question. Could you please rephrase it or provide proper question so I can assist you better!"
   const sampleQuestion:Array<string> = ["Tell me about RemoteHire?","What is the company's mission?","What are services provided by remotehire?"]
   const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
-  const [showSampleQue, setShowChatbot] = useState(true)
+  const [typing,setTyping] =useState(false)
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -23,6 +26,9 @@ const Chatbot = () => {
   };
 
   useEffect(() => {
+    
+    localStorage.setItem("ChatbotMessages", JSON.stringify(messages))
+
     const timer = setTimeout(() => {
       scrollToBottom();
     }, 0);
@@ -55,15 +61,15 @@ const Chatbot = () => {
 
    const handleSampleQuestion = (e:any,question:string) => {
     const userMessage = { text: question, sender: "user" };
-    setMessages((message) => [...message, userMessage]);
+    setMessages((message: any) => [...message, userMessage]);
     setInput("");
-    setShowChatbot(false)
-    setTyping(true);
+    setLoading(true);
+    
 
     let answer :any= getBestMatch(question);
     setTimeout(() => {
-      setMessages((message) => [...message, { text: answer, sender: "bot"  }]);
-      setTyping(false);
+      setMessages((message: any) => [...message, { text: answer, sender: "bot"  }]);
+      setLoading(false);
     }, 1000);
 
    }
@@ -73,26 +79,35 @@ const Chatbot = () => {
     if (!input.trim()) return;
 
     const userMessage = { text: input, sender: "user" };
-    setMessages((message) => [...message, userMessage]);
+    setMessages((message: any) => [...message, userMessage]);
     setInput("");
-    setShowChatbot(false)
-    setTyping(true);
+    setLoading(true);
 
     const greetings : Array<string> = ["hii","hello","hii there!","hi","hey"]
 
     if(greetings.includes(input.toLowerCase())){
       setTimeout(() => {
-        setMessages((message) => [...message, { text: "Hello!👋 How can I help you?", sender: "bot" }]);
-        setTyping(false);
+        setMessages((message: any) => [...message, { text: "Hello!👋 How can I help you?", sender: "bot" }]);
+        setLoading(false);
       }, 1000);
       return
     }
 
+    if(["thanks","thank you"].includes(input.toLowerCase())){
+      setTimeout(() => {
+        setMessages((message: any) => [...message, { text: "You are welcome!😊 Have a great day.", sender: "bot" }]);
+        setLoading(false);
+      }, 1000);
+      return
+    }
+
+    
+
 
     let answer :any= getBestMatch(input) || notResponseMsg;
     setTimeout(() => {
-      setMessages((message) => [...message, { text: answer, sender: "bot" }]);
-      setTyping(false);
+      setMessages((message: any) => [...message, { text: answer, sender: "bot" }]);
+      setLoading(false);
     }, 1000);
   };
 
@@ -105,24 +120,25 @@ const Chatbot = () => {
         <div className="flex flex-col justify-end" style={{height: "calc(100% - 4rem)"}}>
           <div className="flex-grow-1 flex-shrink-0 p-4 overflow-y-auto" style={{ maxHeight: "80%" }}>
            <div className=" m-2 h-[50px] w-[50px] "><iframe src="https://giphy.com/embed/S60CrN9iMxFlyp7uM8" width="100%" height="100%"  className="giphy-embed rounded-full pointer-events-none" allowFullScreen></iframe></div>
-            {messages.map((msg, index) => (
+            {messages.map((msg:any, index:any) => (
               <div key={index} 
               className={`py-2 ${msg.sender === "user" ? "flex flex-row justify-end" : ""}`}>
                 <div 
                 className={`max-w-[250px] p-2 rounded-lg inline-block ${msg.sender === "bot" ? "bg-gray-100 " : "bg-indigo-100 "}`}>
                    {
-                    msg.sender === "user" ? 
-                    <p>{msg.text}</p>
-                    : 
+                    msg.sender === "bot" && index==messages.length-1 ? 
+                    
                     <Typewriter
-                      onInit={(typewriter) => {
-                      typewriter.typeString(msg.text)
-                        .stop()
-                        .start();
-                      }}
-                      options={{cursor:"",delay:30}}
-                      
-                    />
+                    onInit={(typewriter) => {
+                    typewriter.typeString(msg.text)
+                      .stop()
+                      .start();
+                    }}
+                    options={{cursor:"",delay:30}}
+                    
+                  />
+                    : 
+                    <p>{msg.text}</p>
                    }
                    
                     
@@ -144,7 +160,7 @@ const Chatbot = () => {
                   
               </div>
             ))}
-            {typing && <PulseLoader color="grey" />}
+            {loading && <PulseLoader color="grey" />}
             <div ref={messagesEndRef} />
           </div>
 
