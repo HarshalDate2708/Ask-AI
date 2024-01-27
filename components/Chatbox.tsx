@@ -9,7 +9,7 @@ import { sampleData } from "@/constant";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([
-    { text: "Hello! 😊 How can I help you?", sender: "bot"  }
+    { text: "Hello! How can I help you?", sender: "bot"  }
   ]);
   const notResponseMsg:string = "I'm sorry 😔, I didn't quite understand your question. Could you please rephrase it or provide proper question so I can assist you better!"
   const sampleQuestion:Array<string> = ["Tell me about RemoteHire?","What is the company's mission?","What are services provided by remotehire?"]
@@ -128,7 +128,7 @@ const Chatbot = () => {
                     
                 </div>
                 {
-                   msg.text=="Hello! 😊 How can I help you?"?
+                   msg.text=="Hello! How can I help you?" ?
                   <div>
                       {
                         sampleQuestion.map((que)=>(
