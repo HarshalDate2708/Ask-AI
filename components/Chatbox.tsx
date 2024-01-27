@@ -128,7 +128,7 @@ const Chatbot = () => {
                     
                 </div>
                 {
-                   msg.text=="Hello! How can I help you?"?
+                   msg.text=="Hello! 😊 How can I help you?"?
                   <div>
                       {
                         sampleQuestion.map((que)=>(
