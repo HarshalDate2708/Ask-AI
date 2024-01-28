@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-
 body {
     background-image: url("https://e0.pxfuel.com/wallpapers/329/765/desktop-wallpaper-web-design-dark-developer.jpg");
     background-repeat: no-repeat;
@@ -17,7 +10,6 @@ body {
     height: 100vh;
     
 }
-
 .topbar {
   @apply fixed top-0 z-30 flex w-full items-center justify-between bg-slate-800 text-white px-6 py-2;
 }
