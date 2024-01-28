@@ -174,7 +174,6 @@ const Chatbot = () => {
               placeholder="Type your message..."
             />
             <button type="submit" className=" text-white p-2 rounded-full bg-gray-100 border-2 border-black cursor-pointer ">
-              {/* <img src={sendIcon} height={10} width={10} /> */}
               <Image  src={sendIcon} alt="send"  height={20} width={20}/>
             </button>
           </form>
