@@ -7,11 +7,19 @@ import { sendIcon } from "@/public";
 import Image from "next/image";
 import { sampleData } from "@/constant";
 
+const ISSERVER = typeof window === "undefined";
+
+
 const Chatbot = () => {
-  const getData = localStorage.getItem("ChatbotMessages");
-  const data = getData ? JSON.parse(getData) : [
-    { text: "Hello! How can I help you?", sender: "bot"  }
-  ] ;
+  
+  if(!ISSERVER) {
+    const getData = localStorage.getItem("ChatbotMessages");
+    var data = getData ? JSON.parse(getData) : [
+      { text: "Hello! How can I help you?", sender: "bot"  }
+    ] ;
+  }
+
+  
 
   const [messages, setMessages] = useState(data);
   const notResponseMsg:string = "I'm sorry 😔, I didn't quite understand your question. Could you please rephrase it or provide proper question so I can assist you better!"
@@ -26,8 +34,9 @@ const Chatbot = () => {
   };
 
   useEffect(() => {
-    
-    localStorage.setItem("ChatbotMessages", JSON.stringify(messages))
+    if(!ISSERVER) {
+      localStorage.setItem("ChatbotMessages", JSON.stringify(messages))
+    }
 
     const timer = setTimeout(() => {
       scrollToBottom();
